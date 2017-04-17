@@ -1,4 +1,4 @@
-package com.example.mobileappdevelop.json.modelclass;
+package com.example.mobileappdevelop.json.ModelClassCurrentWeather;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

@@ -1,8 +1,6 @@
 package com.example.mobileappdevelop.json.Interfaces;
 
-import com.example.mobileappdevelop.json.modelclass.CurrentWeather;
-
-import java.util.ArrayList;
+import com.example.mobileappdevelop.json.ModelClassCurrentWeather.CurrentWeather;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

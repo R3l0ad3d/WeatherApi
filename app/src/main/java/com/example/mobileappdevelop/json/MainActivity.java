@@ -2,14 +2,10 @@ package com.example.mobileappdevelop.json;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.mobileappdevelop.json.Interfaces.CurrentWeathearResponsAPI;
-import com.example.mobileappdevelop.json.modelclass.CurrentWeather;
-
-import java.util.ArrayList;
+import com.example.mobileappdevelop.json.ModelClassCurrentWeather.CurrentWeather;
 
 import retrofit2.Call;
 import retrofit2.Callback;
