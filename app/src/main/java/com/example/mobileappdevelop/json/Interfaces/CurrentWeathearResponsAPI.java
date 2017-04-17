@@ -12,6 +12,6 @@ import retrofit2.http.GET;
  */
 
 public interface CurrentWeathearResponsAPI {
-    @GET("weather?q=London,uk&appid=b1b15e88fa797225412429c1c50c122a1")
-    Call<ArrayList<CurrentWeather> > getRespons();
+    @GET("/data/2.5/weather?q=Dhaka&appid=8e3a5f8c16948a8c2c36fe44e9bb23ff")
+    Call<CurrentWeather > getRespons();
 }
