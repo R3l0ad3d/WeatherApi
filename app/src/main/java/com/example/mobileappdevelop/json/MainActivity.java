@@ -30,12 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
         RequestForCurrentWeatherData();
 
-        /*if(currentWeatherArrayList.size()>0){
-            tvText.setText(String.valueOf(currentWeatherArrayList.get(0).getMain().getPressure()));
-        }else {
-            tvText.setText("Nothing found");
-        }*/
-
     }
 
     private void RequestForCurrentWeatherData(){
