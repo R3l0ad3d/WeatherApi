@@ -4,8 +4,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.example.mobileappdevelop.json.Interfaces.CurrentWeathearResponsAPI;
-import com.example.mobileappdevelop.json.ModelClassCurrentWeather.CurrentWeather;
+import com.example.mobileappdevelop.json.Interfaces.CurrentWeathearResponsAPIService;
+import com.example.mobileappdevelop.json.ModelClassCurrentWeather.CurrentWeatherMain;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -18,8 +18,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvText;
 
     private final String BASE_URL = "http://api.openweathermap.org";
-    CurrentWeathearResponsAPI apiRespons;
-    CurrentWeather currentWeather;
+    CurrentWeathearResponsAPIService apiRespons;
+    CurrentWeatherMain currentWeatherMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,23 +43,23 @@ public class MainActivity extends AppCompatActivity {
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        apiRespons = retrofit.create(CurrentWeathearResponsAPI.class);
+        apiRespons = retrofit.create(CurrentWeathearResponsAPIService.class);
 
-        Call<CurrentWeather> arrayListCall = apiRespons.getRespons();
+        Call<CurrentWeatherMain> arrayListCall = apiRespons.getRespons();
 
-        arrayListCall.enqueue(new Callback<CurrentWeather>() {
+        arrayListCall.enqueue(new Callback<CurrentWeatherMain>() {
             @Override
-            public void onResponse(Call<CurrentWeather> call, Response<CurrentWeather> response) {
+            public void onResponse(Call<CurrentWeatherMain> call, Response<CurrentWeatherMain> response) {
                 if(response.code()==200){
-                    currentWeather = response.body();
-                    tvText.setText(String.valueOf(currentWeather.getMain().getPressure()));
+                    currentWeatherMain = response.body();
+                    tvText.setText(String.valueOf(currentWeatherMain.getMain().getPressure()));
                 }else {
                     tvText.setText("Error from onRespons");
                 }
             }
 
             @Override
-            public void onFailure(Call<CurrentWeather> call, Throwable t) {
+            public void onFailure(Call<CurrentWeatherMain> call, Throwable t) {
                 tvText.setText(t.getMessage());
             }
         });

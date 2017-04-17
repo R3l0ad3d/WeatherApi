@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Mobile App Develop on 4/17/2017.
  */
 
-public class CurrentWeather {
+public class CurrentWeatherMain {
     @SerializedName("coord")
     @Expose
     private Coord coord;
