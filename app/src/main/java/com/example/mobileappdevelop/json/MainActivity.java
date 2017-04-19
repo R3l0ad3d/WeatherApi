@@ -1,9 +1,12 @@
 package com.example.mobileappdevelop.json;
 
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.example.mobileappdevelop.json.FragementPageAdapter.PageAdapter;
 import com.example.mobileappdevelop.json.Interfaces.CurrentWeathearResponsAPIService;
 import com.example.mobileappdevelop.json.ModelClassCurrentWeather.CurrentWeatherMain;
 
@@ -16,10 +19,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
     private TextView tvText;
+    private TabLayout tabs;
+    private ViewPager mPager;
+    private PageAdapter pageAdapter;
 
     private final String BASE_URL = "http://api.openweathermap.org";
     CurrentWeathearResponsAPIService apiRespons;
-    CurrentWeatherMain currentWeatherMain;
+    public static CurrentWeatherMain currentWeatherMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +33,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         tvText = (TextView) findViewById(R.id.tvtemperature);
+        tabs = (TabLayout) findViewById(R.id.tabs);
+        mPager = (ViewPager) findViewById(R.id.mpager);
 
-        RequestForCurrentWeatherData();
+        pageAdapter = new PageAdapter(getSupportFragmentManager());
+
+        mPager.setAdapter(pageAdapter);
+        tabs.setupWithViewPager(mPager);
+
+        //RequestForCurrentWeatherData();
 
     }
 
@@ -46,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<CurrentWeatherMain> call, Response<CurrentWeatherMain> response) {
                 if(response.code()==200){
                     currentWeatherMain = response.body();
-                    tvText.setText(String.valueOf(currentWeatherMain.getMain().getPressure()));
+                    tvText.setText(String.valueOf(currentWeatherMain.getMain().getTemp()));
                 }else {
                     tvText.setText("Error from onRespons");
                 }

@@ -48,7 +48,7 @@ public class CurrentWeatherRespons {
         });
     }
 
-    private boolean isRespond(){
+    public boolean isRespond(){
         if(flag) return true;
         else return false;
     }
