@@ -14,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class ForeCastRespons {
-    private WeatherForeCastMain weatherForeCastMain;
+    private WeatherForeCastMain weatherForeCastData;
     private Retrofit retrofit;
     private WeatherForeCastAPIService foreCastAPIService;
     private static final String BASE_URL = "http://api.openweathermap.org/";
@@ -33,15 +33,15 @@ public class ForeCastRespons {
             @Override
             public void onResponse(Call<WeatherForeCastMain> call, Response<WeatherForeCastMain> response) {
                 if(response.code()==200){
-                    weatherForeCastMain = response.body();
-                }else {
-                    flag = false;
-                }
+                    WeatherForeCastMain weatherForeCastMain = response.body();
+                    setWeatherForeCastData(weatherForeCastMain);
+                    flag=true;
+                }else flag = false;
             }
 
             @Override
             public void onFailure(Call<WeatherForeCastMain> call, Throwable t) {
-                flag = false;
+
             }
         });
     }
@@ -51,8 +51,11 @@ public class ForeCastRespons {
         else return false;
     }
 
-    public WeatherForeCastMain getWeatherForeCastMain() {
-        return weatherForeCastMain;
+    public WeatherForeCastMain getWeatherForeCastData() {
+        return weatherForeCastData;
     }
 
+    public void setWeatherForeCastData(WeatherForeCastMain weatherForeCastData) {
+        this.weatherForeCastData = weatherForeCastData;
+    }
 }
