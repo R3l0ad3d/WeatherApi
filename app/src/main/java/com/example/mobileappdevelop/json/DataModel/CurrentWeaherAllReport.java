@@ -8,6 +8,10 @@ import com.google.gson.internal.Streams;
  */
 
 public class CurrentWeaherAllReport {
+    protected String CountryName;
+    protected String CityName;
+    protected String Date;
+    protected String WeatherRepor;
     protected String Cloud;
     protected String Temperature;
     protected String Temperature_Max;
