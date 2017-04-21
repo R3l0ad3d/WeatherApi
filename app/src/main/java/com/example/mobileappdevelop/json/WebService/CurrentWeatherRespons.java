@@ -1,5 +1,7 @@
 package com.example.mobileappdevelop.json.WebService;
 
+import android.util.Log;
+
 import com.example.mobileappdevelop.json.Interfaces.CurrentWeathearResponsAPIService;
 import com.example.mobileappdevelop.json.ModelClassCurrentWeather.CurrentWeatherMain;
 
@@ -14,15 +16,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class CurrentWeatherRespons {
-    private static final String BASE_URL = "http://api.openweathermap.org/";
-
+    private final String BASE_URL = "http://api.openweathermap.org";
     private CurrentWeathearResponsAPIService apiRespons;
-    private CurrentWeatherMain currentWeather;
+
+    private CurrentWeatherMain weatherMain;
 
     private boolean flag;
+/*
 
     public void getRespons(){
-        final Retrofit retrofit = new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -34,26 +37,35 @@ public class CurrentWeatherRespons {
             @Override
             public void onResponse(Call<CurrentWeatherMain> call, Response<CurrentWeatherMain> response) {
                 if(response.code()==200){
-                    currentWeather = response.body();
+                    weatherMain = response.body();
                     flag = true;
+
+                    Log.e("is Work","work................."+weatherMain.getDt().toString());
                 }else {
                     flag = false;
+                    Log.e("is Work","not work.................");
                 }
             }
 
             @Override
             public void onFailure(Call<CurrentWeatherMain> call, Throwable t) {
-                flag = false;
+                flag=false;
+                Log.e("is Work",t.getMessage());
             }
         });
     }
+*/
 
     public boolean isRespond(){
         if(flag) return true;
         else return false;
     }
 
-    public CurrentWeatherMain getCurrentWeather() {
-        return currentWeather;
+    public CurrentWeatherMain getWeatherMain() {
+        return weatherMain;
+    }
+
+    public void setWeatherMain(CurrentWeatherMain weatherMain) {
+        this.weatherMain = weatherMain;
     }
 }

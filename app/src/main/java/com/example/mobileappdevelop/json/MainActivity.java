@@ -23,9 +23,9 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mPager;
     private PageAdapter pageAdapter;
 
-    private final String BASE_URL = "http://api.openweathermap.org";
+    /*private final String BASE_URL = "http://api.openweathermap.org";
     CurrentWeathearResponsAPIService apiRespons;
-    public static CurrentWeatherMain currentWeatherMain;
+    public static CurrentWeatherMain currentWeatherMain;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,14 +45,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void RequestForCurrentWeatherData(){
+    /*private void RequestForCurrentWeatherData(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         apiRespons = retrofit.create(CurrentWeathearResponsAPIService.class);
 
-        Call<CurrentWeatherMain> arrayListCall = apiRespons.getRespons();
+        Call<CurrentWeatherMain> arrayListCall = apiRespons.getRespons("/data/2.5/weather?q=Dhaka&appid=8e3a5f8c16948a8c2c36fe44e9bb23ff");
 
         arrayListCall.enqueue(new Callback<CurrentWeatherMain>() {
             @Override
@@ -70,5 +70,5 @@ public class MainActivity extends AppCompatActivity {
                 tvText.setText(t.getMessage());
             }
         });
-    }
+    }*/
 }

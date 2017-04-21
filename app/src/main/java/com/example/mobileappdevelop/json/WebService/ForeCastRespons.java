@@ -27,7 +27,7 @@ public class ForeCastRespons {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         foreCastAPIService = retrofit.create(WeatherForeCastAPIService.class);
-        final Call<WeatherForeCastMain> getService = foreCastAPIService.getForeCastRespons();
+        final Call<WeatherForeCastMain> getService = foreCastAPIService.getForeCastRespons("data/2.5/forecast?q=Dhaka&units=metric&appid=8e3a5f8c16948a8c2c36fe44e9bb23ff");
 
         getService.enqueue(new Callback<WeatherForeCastMain>() {
             @Override

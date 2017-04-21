@@ -51,7 +51,7 @@ public class FragmentForeCase extends Fragment {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         WeatherForeCastAPIService apiService = retrofit.create(WeatherForeCastAPIService.class);
-        Call<WeatherForeCastMain> foreCastMainCall = apiService.getForeCastRespons();
+        Call<WeatherForeCastMain> foreCastMainCall = apiService.getForeCastRespons("data/2.5/forecast?q=Dhaka&units=metric&appid=8e3a5f8c16948a8c2c36fe44e9bb23ff");
 
         foreCastMainCall.enqueue(new Callback<WeatherForeCastMain>() {
             @Override
@@ -72,7 +72,7 @@ public class FragmentForeCase extends Fragment {
     }
 
     private void setData(WeatherForeCastMain data) {
-        tvTest.setText(String.valueOf(data.getCity().getCountry()));
+        tvTest.setText(String.valueOf(data.getList().get(0).getMain().getTemp()));
     }
 
 }
