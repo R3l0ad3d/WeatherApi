@@ -27,7 +27,7 @@ public class CurrentWeaherAllReport {
         this.Convert(currentWeather);
     }
 
-    private void Convert(CurrentWeatherMain currentWeather) {
+    protected void Convert(CurrentWeatherMain currentWeather) {
         setCloud(String.valueOf(currentWeather.getClouds()));
         setTemperature(String.valueOf(currentWeather.getMain().getTemp()));
         setTemperature_Max(String.valueOf(currentWeather.getMain().getTempMax()));

@@ -14,9 +14,9 @@ import android.widget.Toast;
 import com.example.mobileappdevelop.json.DataModel.CurrentWeaherAllReport;
 import com.example.mobileappdevelop.json.Interfaces.CurrentWeathearResponsAPIService;
 import com.example.mobileappdevelop.json.MainActivity;
+import com.example.mobileappdevelop.json.MenuService;
 import com.example.mobileappdevelop.json.ModelClassCurrentWeather.CurrentWeatherMain;
 import com.example.mobileappdevelop.json.R;
-import com.example.mobileappdevelop.json.WebService.CurrentWeatherRespons;
 import com.squareup.picasso.Picasso;
 
 import retrofit2.Call;
@@ -30,6 +30,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class FragmentCurrentWeather extends Fragment {
 
+    private MenuService menuService;
+
     private TextView pressureTV,humidityTV;
     private TextView temperatureTV,temperatureMaxTV,temperatureMiniTV;
     private TextView sunSetOrRiseTV,sunSetOrRiseDownTV,sunSetOrRiseTime,sunSetOrRiseTimeDown;
@@ -40,6 +42,8 @@ public class FragmentCurrentWeather extends Fragment {
     private final String BASE_URL = "http://api.openweathermap.org";
     private CurrentWeathearResponsAPIService apiRespons;
 
+    private String dataType;
+
     public FragmentCurrentWeather() {
         // Required empty public constructor
     }
@@ -49,6 +53,10 @@ public class FragmentCurrentWeather extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fragment_current_weather, container, false);
+
+        menuService = new MainActivity();
+        dataType = menuService.getType();
+        Toast.makeText(getContext(),menuService.getType(),Toast.LENGTH_LONG).show();
 
         locationTV = (TextView) view.findViewById(R.id.tvPlaceLocation);
         dateTV = (TextView) view.findViewById(R.id.tvTime);
@@ -86,6 +94,12 @@ public class FragmentCurrentWeather extends Fragment {
         return view;
     }
 
+   /* @Override
+    public void onStart() {
+        Toast.makeText(getContext(),menuService.getType(),Toast.LENGTH_LONG).show();
+        super.onStart();
+    }*/
+
     private void RequestForCurrentWeatherData(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -94,7 +108,7 @@ public class FragmentCurrentWeather extends Fragment {
         apiRespons = retrofit.create(CurrentWeathearResponsAPIService.class);
 
         Call<CurrentWeatherMain> arrayListCall = apiRespons
-                .getRespons("/data/2.5/weather?q=Dhaka&units=metric&appid=8e3a5f8c16948a8c2c36fe44e9bb23ff");
+                .getRespons("/data/2.5/weather?q=Dhaka&units="+dataType+"&appid=8e3a5f8c16948a8c2c36fe44e9bb23ff");
 
         arrayListCall.enqueue(new Callback<CurrentWeatherMain>() {
             @Override
@@ -102,7 +116,7 @@ public class FragmentCurrentWeather extends Fragment {
                 if(response.code()==200){
                     CurrentWeatherMain currentWeatherMain = response.body(); //error here nothing get from server
                     setData(currentWeatherMain);
-                    Toast.makeText(getContext(),currentWeatherMain.getName(),Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getContext(),currentWeatherMain.getName(),Toast.LENGTH_LONG).show();
                 }else {
                     Toast.makeText(getContext(),"Here is error form server side",Toast.LENGTH_LONG).show();
                 }
@@ -120,7 +134,7 @@ public class FragmentCurrentWeather extends Fragment {
         CurrentWeaherAllReport report = new CurrentWeaherAllReport(currentWeatherMain);
 
         //set Temperature
-        temperatureTV.setText(report.getTemperature());
+        temperatureTV.setText(report.getTemperature()+"° C");
         temperatureMiniTV.setText(report.getTemperature_Mini());
         temperatureMaxTV.setText(report.getTemperature_Max());
         Picasso.with(getContext()).load("http://openweathermap.org/img/w/"+currentWeatherMain.getWeather().get(0).getIcon()+".png")

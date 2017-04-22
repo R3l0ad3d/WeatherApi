@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.example.mobileappdevelop.json.Interfaces.WeatherForeCastAPIService;
 import com.example.mobileappdevelop.json.ModelClassForecast.WeatherForeCastMain;
 import com.example.mobileappdevelop.json.R;
-import com.example.mobileappdevelop.json.WebService.ForeCastRespons;
 
 import retrofit2.Call;
 import retrofit2.Callback;

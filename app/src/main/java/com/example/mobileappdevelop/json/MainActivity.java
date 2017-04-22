@@ -4,11 +4,16 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.mobileappdevelop.json.FragementPageAdapter.PageAdapter;
 import com.example.mobileappdevelop.json.Interfaces.CurrentWeathearResponsAPIService;
+import com.example.mobileappdevelop.json.MenuService;
 import com.example.mobileappdevelop.json.ModelClassCurrentWeather.CurrentWeatherMain;
+import com.example.mobileappdevelop.json.R;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -16,12 +21,13 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MenuService {
 
     private TextView tvText;
     private TabLayout tabs;
     private ViewPager mPager;
     private PageAdapter pageAdapter;
+    public static String dataType="metric";
 
     /*private final String BASE_URL = "http://api.openweathermap.org";
     CurrentWeathearResponsAPIService apiRespons;
@@ -43,6 +49,34 @@ public class MainActivity extends AppCompatActivity {
 
         //RequestForCurrentWeatherData();
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public void getDataType(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.celsius:
+                dataType = "metric";
+                mPager.setAdapter(pageAdapter);
+                tabs.setupWithViewPager(mPager);
+                break;
+            case R.id.fahrenheit:
+                dataType = "imperial";
+                mPager.setAdapter(pageAdapter);
+                tabs.setupWithViewPager(mPager);
+                break;
+        }
+    }
+
+
+    @Override
+    public String getType() {
+        return dataType;
     }
 
     /*private void RequestForCurrentWeatherData(){
