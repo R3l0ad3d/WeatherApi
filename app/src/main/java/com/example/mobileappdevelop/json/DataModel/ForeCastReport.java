@@ -39,7 +39,8 @@ public class ForeCastReport {
     }
 
     protected void convert(WeatherForeCastMain foreCastMain) {
-        List<ForeCastList> list = foreCastMain.getList();
+        List<ForeCastList> list = new ArrayList<>();
+        list.addAll(foreCastMain.getList());
         int list_size = list.size();
         for(int i=0;i<list_size;i++){
             ForeCastList foreCastItem = list.get(i);
@@ -91,16 +92,12 @@ public class ForeCastReport {
         }else {
             report.setGroundLevel("");
         }
-        if(!(foreCastItem.getRain().get3h()).isNaN()){
-            report.setRain_3Hour_Report(String.valueOf(foreCastItem.getRain().get3h()));
-        }else {
-            report.setRain_3Hour_Report("");
-        }
-        if(!(foreCastItem.getSnow().get3h().isNaN())){
-            report.setSnow_3Hour_Report(String.valueOf(foreCastItem.getSnow().get3h()));
-        }else {
-            report.setSnow_3Hour_Report("");
-        }
+
+        report.setRain_3Hour_Report("");
+
+
+        report.setSnow_3Hour_Report("");
+
         if(!foreCastItem.getWind().getSpeed().isNaN()){
             report.setWind(String.valueOf(foreCastItem.getWind().getSpeed()));
         }else {

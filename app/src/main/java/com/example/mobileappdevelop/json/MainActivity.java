@@ -1,6 +1,14 @@
 package com.example.mobileappdevelop.json;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,30 +16,37 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mobileappdevelop.json.FragementPageAdapter.PageAdapter;
-import com.example.mobileappdevelop.json.Interfaces.CurrentWeathearResponsAPIService;
-import com.example.mobileappdevelop.json.MenuService;
-import com.example.mobileappdevelop.json.ModelClassCurrentWeather.CurrentWeatherMain;
-import com.example.mobileappdevelop.json.R;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import java.io.IOException;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MenuService {
+public class MainActivity extends AppCompatActivity implements MenuService,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
 
     private TextView tvText;
     private TabLayout tabs;
     private ViewPager mPager;
     private PageAdapter pageAdapter;
-    public static String dataType="metric";
+    public static String dataType = "metric";
 
-    /*private final String BASE_URL = "http://api.openweathermap.org";
-    CurrentWeathearResponsAPIService apiRespons;
-    public static CurrentWeatherMain currentWeatherMain;*/
+    private GoogleApiClient apiClient;
+    private LocationRequest locationRequest;
+    private Geocoder geocoder;
+    private List<Address> addressList;
+
+    private static String currentCity="Dhaka";
+    private static String currentCountry="Bangladesh";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,19 +62,42 @@ public class MainActivity extends AppCompatActivity implements MenuService {
         mPager.setAdapter(pageAdapter);
         tabs.setupWithViewPager(mPager);
 
-        //RequestForCurrentWeatherData();
+        geocoder = new Geocoder(this);
 
+        apiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addConnectionCallbacks(this)
+                .addApi(LocationServices.API)
+                .build();
+
+        if(currentCity.isEmpty()){
+            tvText.setText("SOmething error");
+        }else {
+            tvText.setText(currentCity+" "+currentCountry);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        apiClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    protected void onPause() {
+        apiClient.disconnect();
+        super.onPause();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu,menu);
+        inflater.inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     public void getDataType(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.celsius:
                 dataType = "metric";
                 mPager.setAdapter(pageAdapter);
@@ -79,30 +117,67 @@ public class MainActivity extends AppCompatActivity implements MenuService {
         return dataType;
     }
 
-    /*private void RequestForCurrentWeatherData(){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        apiRespons = retrofit.create(CurrentWeathearResponsAPIService.class);
+    @Override
+    public String getCity() {
+        return currentCity;
+    }
 
-        Call<CurrentWeatherMain> arrayListCall = apiRespons.getRespons("/data/2.5/weather?q=Dhaka&appid=8e3a5f8c16948a8c2c36fe44e9bb23ff");
+    @Override
+    public String getCounty() {
+        return currentCountry;
+    }
 
-        arrayListCall.enqueue(new Callback<CurrentWeatherMain>() {
-            @Override
-            public void onResponse(Call<CurrentWeatherMain> call, Response<CurrentWeatherMain> response) {
-                if(response.code()==200){
-                    currentWeatherMain = response.body();
-                    tvText.setText(String.valueOf(currentWeatherMain.getMain().getTemp()));
-                }else {
-                    tvText.setText("Error from onRespons");
-                }
-            }
 
-            @Override
-            public void onFailure(Call<CurrentWeatherMain> call, Throwable t) {
-                tvText.setText(t.getMessage());
-            }
-        });
-    }*/
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+        locationRequest = LocationRequest.create()
+                .setInterval(1000)
+                .setFastestInterval(1000)
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+
+            Toast.makeText(getApplicationContext(),"Please enable your Location Service",Toast.LENGTH_LONG).show();
+
+            return;
+        }
+        LocationServices.FusedLocationApi.requestLocationUpdates(apiClient,locationRequest,this);
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        try {
+            addressList = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(),1);
+            currentCity = addressList.get(0).getLocality();
+            currentCountry = addressList.get(0).getCountryName();
+
+            Toast.makeText(getApplicationContext(),currentCity+" "+currentCountry,Toast.LENGTH_LONG).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

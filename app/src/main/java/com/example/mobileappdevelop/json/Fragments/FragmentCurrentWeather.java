@@ -3,7 +3,6 @@ package com.example.mobileappdevelop.json.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,12 +36,15 @@ public class FragmentCurrentWeather extends Fragment {
     private TextView sunSetOrRiseTV,sunSetOrRiseDownTV,sunSetOrRiseTime,sunSetOrRiseTimeDown;
     private TextView windTV,directionTV,weatherReportTV,dateTV,locationTV;
 
-    private ImageView weatherIconIV,sunSetOrRiseIconIV,humidityIconIV,windIconIV,directionIconIV;
+    private ImageView weatherIconIV,sunSetOrRiseIconIV,humidityIconIV;
+    private ImageView windIconIV,directionIconIV,pressureIV;
 
     private final String BASE_URL = "http://api.openweathermap.org";
     private CurrentWeathearResponsAPIService apiRespons;
 
     private String dataType;
+    private String currentCountry;
+    private String currentCity;
 
     public FragmentCurrentWeather() {
         // Required empty public constructor
@@ -56,12 +58,18 @@ public class FragmentCurrentWeather extends Fragment {
 
         menuService = new MainActivity();
         dataType = menuService.getType();
-        Toast.makeText(getContext(),menuService.getType(),Toast.LENGTH_LONG).show();
+        currentCity = menuService.getCity();
+        currentCountry = menuService.getCounty();
+
 
         locationTV = (TextView) view.findViewById(R.id.tvPlaceLocation);
         dateTV = (TextView) view.findViewById(R.id.tvTime);
 
         weatherReportTV = (TextView) view.findViewById(R.id.tvWeatherReport);
+
+        //pressure
+        pressureTV = (TextView) view.findViewById(R.id.tvPressure);
+        pressureIV = (ImageView) view.findViewById(R.id.ivPressureIcon);
 
         //Temperature
         temperatureTV = (TextView) view.findViewById(R.id.tvTemperature);
@@ -108,7 +116,7 @@ public class FragmentCurrentWeather extends Fragment {
         apiRespons = retrofit.create(CurrentWeathearResponsAPIService.class);
 
         Call<CurrentWeatherMain> arrayListCall = apiRespons
-                .getRespons("/data/2.5/weather?q=Dhaka&units="+dataType+"&appid=8e3a5f8c16948a8c2c36fe44e9bb23ff");
+                .getRespons("/data/2.5/weather?q="+currentCity+"&units="+dataType+"&appid=8e3a5f8c16948a8c2c36fe44e9bb23ff");
 
         arrayListCall.enqueue(new Callback<CurrentWeatherMain>() {
             @Override
@@ -141,14 +149,22 @@ public class FragmentCurrentWeather extends Fragment {
                 .into(weatherIconIV);
 
 
-        //pressureTV.setText(report.getPressure());
+            pressureTV.setText(report.getPressure());
+
+
         humidityTV.setText(report.getHumidity());
         windTV.setText(report.getWind());
         directionTV.setText(report.getDirection());
 
         sunSetOrRiseTime.setText(report.getSunRiseTime());
+        sunSetOrRiseTV.setText("Sun Rise Time");
         sunSetOrRiseTimeDown.setText(report.getSunSetTime());
+        sunSetOrRiseDownTV.setText("Sun Set Time");
 
+        dateTV.setText(report.getDate());
+        weatherReportTV.setText(report.getWeatherRepor());
+
+        pressureIV.setImageResource(R.drawable.pressure);
         sunSetOrRiseIconIV.setImageResource(R.drawable.sunrise);
         windIconIV.setImageResource(R.drawable.wind);
         directionIconIV.setImageResource(R.drawable.direction);

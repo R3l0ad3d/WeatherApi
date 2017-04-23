@@ -6,4 +6,6 @@ package com.example.mobileappdevelop.json;
 
 public interface MenuService {
     public String getType();
+    public String getCity();
+    public String getCounty();
 }

@@ -3,6 +3,10 @@ package com.example.mobileappdevelop.json.DataModel;
 import com.example.mobileappdevelop.json.ModelClassCurrentWeather.CurrentWeatherMain;
 import com.google.gson.internal.Streams;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
  * Created by r3l0ad3d on 4/20/17.
  */
@@ -12,6 +16,7 @@ public class CurrentWeaherAllReport {
     protected String CityName;
     protected String Date;
     protected String WeatherRepor;
+    protected String WeatherIcon;
     protected String Cloud;
     protected String Temperature;
     protected String Temperature_Max;
@@ -36,8 +41,63 @@ public class CurrentWeaherAllReport {
         setPressure(String.valueOf(currentWeather.getMain().getPressure()));
         setWind(String.valueOf(currentWeather.getWind().getSpeed()));
         setDirection(String.valueOf(currentWeather.getWind().getDeg()));
-        setSunRiseTime(String.valueOf(currentWeather.getSys().getSunrise()));
-        setSunSetTime(String.valueOf(currentWeather.getSys().getSunset()));
+        //convert Date
+        java.util.Date date = new Date((currentWeather.getSys().getSunrise())*1000L);
+        SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+6"));
+        String formattedDate = sdf.format(date);
+        setSunRiseTime(formattedDate);
+        //COnvert Date
+        java.util.Date date1 = new Date((currentWeather.getSys().getSunset())*1000L);
+        SimpleDateFormat sdf1 = new SimpleDateFormat("h:mm a");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+6"));
+        String formattedDate1 = sdf.format(date1);
+        setSunSetTime(formattedDate1);
+
+        setWeatherRepor(currentWeather.getWeather().get(0).getDescription());
+        setWeatherIcon(currentWeather.getWeather().get(0).getIcon());
+
+        //convert Date
+        java.util.Date date2 = new Date((currentWeather.getDt())*1000L);
+        SimpleDateFormat sdf2 = new SimpleDateFormat("h:mm a");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+6"));
+        String formattedDate2 = sdf.format(date2);
+        setDate(formattedDate2);
+
+        setCityName(currentWeather.getName());
+
+    }
+
+    public String getCityName() {
+        return CityName;
+    }
+
+    protected void setCityName(String cityName) {
+        CityName = cityName;
+    }
+
+    public String getDate() {
+        return Date;
+    }
+
+    protected void setDate(String date) {
+        Date = date;
+    }
+
+    public String getWeatherIcon() {
+        return WeatherIcon;
+    }
+
+    protected void setWeatherIcon(String weatherIcon) {
+        WeatherIcon = weatherIcon;
+    }
+
+    public String getWeatherRepor() {
+        return WeatherRepor;
+    }
+
+    protected void setWeatherRepor(String weatherRepor) {
+        WeatherRepor = weatherRepor;
     }
 
     public String getCloud() {
