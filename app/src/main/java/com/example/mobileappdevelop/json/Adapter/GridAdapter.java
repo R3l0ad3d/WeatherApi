@@ -24,11 +24,13 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.MyHolder> {
 
     private Context context;
     private List<ForeCastReport> reportList = new ArrayList<>();
+    private String dataType;
 
 
-    public GridAdapter(Context context, List<ForeCastReport> list) {
+    public GridAdapter(Context context, List<ForeCastReport> list,String dataType) {
         this.context = context;
         this.reportList = list;
+        this.dataType = dataType;
     }
 
     @Override
@@ -42,10 +44,16 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.MyHolder> {
     @Override
     public void onBindViewHolder(MyHolder holder, int position) {
 
-        holder.Tempereture.setText(reportList.get(position).getTemperature());
-        holder.Pressure.setText(reportList.get(position).getPressure());
-        holder.Humidity.setText(reportList.get(position).getHumidity());
-        holder.Cloud.setText(reportList.get(position).getClouds());
+
+        if (dataType.equals("metric")) {
+            holder.Tempereture.setText(reportList.get(position).getTemperature()+"° C");
+        }else {
+            holder.Tempereture.setText(reportList.get(position).getTemperature()+" F");
+        }
+
+        holder.Pressure.setText(reportList.get(position).getPressure()+" hPa");
+        holder.Humidity.setText(reportList.get(position).getHumidity()+" %");
+        holder.Cloud.setText(reportList.get(position).getClouds()+" %");
         holder.Date.setText(reportList.get(position).getDate());
         holder.WeatherReport.setText(reportList.get(position).getWeatherRepor());
 

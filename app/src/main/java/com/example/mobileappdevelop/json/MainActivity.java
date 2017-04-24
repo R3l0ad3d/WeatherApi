@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements MenuService,
     private TabLayout tabs;
     private ViewPager mPager;
     private PageAdapter pageAdapter;
+
     public static String dataType = "metric";
 
     private GoogleApiClient apiClient;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements MenuService,
     private Geocoder geocoder;
     private List<Address> addressList;
 
+    private static String SearchByCity="";
     private static String currentCity="Dhaka";
     private static String currentCountry="Bangladesh";
 
@@ -70,11 +73,11 @@ public class MainActivity extends AppCompatActivity implements MenuService,
                 .addApi(LocationServices.API)
                 .build();
 
-        if(currentCity.isEmpty()){
+       /* if(currentCity.isEmpty()){
             tvText.setText("SOmething error");
         }else {
             tvText.setText(currentCity+" "+currentCountry);
-        }
+        }*/
     }
 
     @Override
@@ -93,6 +96,23 @@ public class MainActivity extends AppCompatActivity implements MenuService,
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
+        MenuItem item = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                SearchByCity = query;
+                currentCity=SearchByCity;
+                mPager.setAdapter(pageAdapter);
+                tabs.setupWithViewPager(mPager);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -174,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements MenuService,
             currentCity = addressList.get(0).getLocality();
             currentCountry = addressList.get(0).getCountryName();
 
-            Toast.makeText(getApplicationContext(),currentCity+" "+currentCountry,Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(),currentCity+" "+currentCountry,Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -35,6 +35,8 @@ public class FragmentCurrentWeather extends Fragment {
     private TextView temperatureTV,temperatureMaxTV,temperatureMiniTV;
     private TextView sunSetOrRiseTV,sunSetOrRiseDownTV,sunSetOrRiseTime,sunSetOrRiseTimeDown;
     private TextView windTV,directionTV,weatherReportTV,dateTV,locationTV;
+    private TextView tvTestCW;
+
 
     private ImageView weatherIconIV,sunSetOrRiseIconIV,humidityIconIV;
     private ImageView windIconIV,directionIconIV,pressureIV;
@@ -61,6 +63,8 @@ public class FragmentCurrentWeather extends Fragment {
         currentCity = menuService.getCity();
         currentCountry = menuService.getCounty();
 
+
+        tvTestCW = (TextView) view.findViewById(R.id.tvTestCW);
 
         locationTV = (TextView) view.findViewById(R.id.tvPlaceLocation);
         dateTV = (TextView) view.findViewById(R.id.tvTime);
@@ -122,17 +126,20 @@ public class FragmentCurrentWeather extends Fragment {
             @Override
             public void onResponse(Call<CurrentWeatherMain> call, Response<CurrentWeatherMain> response) {
                 if(response.code()==200){
+                    tvTestCW.setEnabled(false);
                     CurrentWeatherMain currentWeatherMain = response.body(); //error here nothing get from server
+
                     setData(currentWeatherMain);
                     //Toast.makeText(getContext(),currentWeatherMain.getName(),Toast.LENGTH_LONG).show();
                 }else {
+                    tvTestCW.setText("Something is error , from server side");
                     Toast.makeText(getContext(),"Here is error form server side",Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<CurrentWeatherMain> call, Throwable t) {
-                //tvText.setText(t.getMessage());
+                tvTestCW.setText(t.getMessage());
             }
         });
     }
@@ -142,19 +149,27 @@ public class FragmentCurrentWeather extends Fragment {
         CurrentWeaherAllReport report = new CurrentWeaherAllReport(currentWeatherMain);
 
         //set Temperature
-        temperatureTV.setText(report.getTemperature()+"° C");
-        temperatureMiniTV.setText(report.getTemperature_Mini());
-        temperatureMaxTV.setText(report.getTemperature_Max());
-        Picasso.with(getContext()).load("http://openweathermap.org/img/w/"+currentWeatherMain.getWeather().get(0).getIcon()+".png")
+        if(dataType.equals("metric")){
+            temperatureTV.setText(report.getTemperature()+"° C");
+            temperatureMiniTV.setText(report.getTemperature_Mini()+"° C");
+            temperatureMaxTV.setText(report.getTemperature_Max()+"° C");
+        }else {
+            temperatureTV.setText(report.getTemperature()+" F");
+            temperatureMiniTV.setText(report.getTemperature_Mini()+" F");
+            temperatureMaxTV.setText(report.getTemperature_Max()+" F");
+        }
+        Picasso.with(getContext()).load("http://openweathermap.org/img/w/"+
+                currentWeatherMain.getWeather().get(0).getIcon()+".png")
                 .into(weatherIconIV);
 
 
-            pressureTV.setText(report.getPressure());
+            pressureTV.setText(report.getPressure()+" hPa");
 
+        locationTV.setText(currentCity+","+currentCountry);
 
-        humidityTV.setText(report.getHumidity());
-        windTV.setText(report.getWind());
-        directionTV.setText(report.getDirection());
+        humidityTV.setText(report.getHumidity()+" %");
+        windTV.setText(report.getWind()+" mps");
+        directionTV.setText(report.getDirection()+" degrees");
 
         sunSetOrRiseTime.setText(report.getSunRiseTime());
         sunSetOrRiseTV.setText("Sun Rise Time");

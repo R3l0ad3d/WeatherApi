@@ -37,7 +37,7 @@ public class FragmentForeCase extends Fragment {
     private MenuService menuService;
     private static String CITY="Dhaka";
     private static String COUNTRY="Bangladesh";
-    private static String TYPE="";
+    private static String TYPE="metric";
 
     private RecyclerView mRecyclerView;
     private TextView tvTest;
@@ -66,7 +66,7 @@ public class FragmentForeCase extends Fragment {
         tvTest = (TextView) view.findViewById(R.id.tvTest);
 
         reportList = new ArrayList<>();
-        gridAdapter = new GridAdapter(getContext(),reportList);
+        gridAdapter = new GridAdapter(getContext(),reportList,TYPE);
         gridLayoutManager = new GridLayoutManager(getContext(),2);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(gridLayoutManager);
